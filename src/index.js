@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const prisma = require('./config/database');
 
 dotenv.config();
 
@@ -10,15 +11,16 @@ const RoutesUsers = require('./routes/users');
 const MiddlewareLogs = require('./middlewares/logs');
 
 app.use(MiddlewareLogs);
-
+app.use(express.json());
 app.use('/users', RoutesUsers);
-
-app.get('/', (req, res, next) => {
-	res.send('Get Method - Hello World');
-});
-
-app.post('/', (req, res, next) => {
-	res.send('Post Method - Hello World');
+app.use('/', async (req, res, next) => {
+	try {
+		await prisma.$connect();
+		console.log('Koneksi berhasil');
+	} catch (e) {
+		console.error('Koneksi gagal', e);
+	}
+	next();
 });
 
 app.listen(port, () => {
