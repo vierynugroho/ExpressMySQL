@@ -6,7 +6,10 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-const RoutesUsers = require('./routes/users.js');
+const RoutesUsers = require('./routes/users');
+const MiddlewareLogs = require('./middlewares/logs');
+
+app.use(MiddlewareLogs);
 
 app.use('/users', RoutesUsers);
 
